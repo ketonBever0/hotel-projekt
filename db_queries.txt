@@ -1,5 +1,4 @@
-[TABLE CREATION]
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -7,16 +6,16 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE customers (
+CREATE TABLE IF NOT EXISTS customers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     mobile_number VARCHAR(255) NOT NULL,
     user_id INT,
-    FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE
 );
 
-CREATE TABLE reservations (
+CREATE TABLE IF NOT EXISTS reservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
@@ -27,7 +26,7 @@ CREATE TABLE reservations (
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON UPDATE CASCADE
 );
 
-CREATE TABLE room_types (
+CREATE TABLE IF NOT EXISTS room_types (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     single_beds INT NOT NULL,
@@ -36,7 +35,7 @@ CREATE TABLE room_types (
     description VARCHAR(255)
 );
 
-CREATE TABLE rooms (
+CREATE TABLE IF NOT EXISTS rooms (
     id INT AUTO_INCREMENT PRIMARY KEY,
     room_number VARCHAR(255) NOT NULL,
     description VARCHAR(255),

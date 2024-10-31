@@ -10,4 +10,5 @@ export async function getUser(req: NextRequest) {
     delete rows[0].password;
     return rows[0];
 
+
 }

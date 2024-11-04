@@ -1,7 +1,8 @@
 type UserType = {
     id: number;
-    fullname: string;
     username: string;
     email: string;
-    role: string
+    fullname: string;
+    role: string;
+    enrolledBy: string | null;
 }

@@ -5,7 +5,9 @@ import pool from "@/app/api/db";
 import { RowDataPacket } from "mysql2";
 
 export async function GET(req: NextRequest) {
-	return NextResponse.json(await getUser(req));
+	const user = await getUser(req);
+	// console.log(user);
+	return NextResponse.json(user);
 }
 
 export async function PATCH(req: NextRequest) {

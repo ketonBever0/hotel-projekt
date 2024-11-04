@@ -10,9 +10,9 @@ export async function POST(req: Request) {
 		const [rows] = await pool.query<RowDataPacket[]>(
 			`
             SELECT * FROM users
-            WHERE email = ?;
+            WHERE username = ?;
             `,
-			[body.email]
+			[body.username]
 		);
 
 		if (rows.length === 0)

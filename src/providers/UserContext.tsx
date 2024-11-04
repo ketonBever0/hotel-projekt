@@ -1,24 +1,57 @@
 "use client"
 
-import axios from "axios";
-import { headers } from "next/headers";
-import { createContext, useState } from "react"
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { createContext, useEffect, useState } from "react"
 
-const UserContext = createContext({});
+export const UserContext = createContext<any | null>(null);
 
-export const UserProvider = ({children}: any) => {
+export const UserProvider = ({ children }: any) => {
 
     const [userData, setUserData] = useState<UserType | null>(null);
     const [token, setToken] = useState<string | null>(null);
 
+    const [refreshToken, setRefreshToken] = useState(false);
+
+    useEffect(() => {
+        const sessionToken: string | null = sessionStorage.getItem("access");
+        if (sessionToken) {
+            setToken(sessionToken);
+        }
+    }, [refreshToken])
+
+    const updateToken = () => setRefreshToken(!refreshToken);
+
+    useEffect(() => {
+        if (token) {
+            getUserData();
+        }
+
+    }, [token])
+
+
     const getUserData = async () => {
-        const req = await axios.get("localhost:3000/api/user/me", {headers: {
-            Authorization: `Bearer ${token}`
-        }});
-        if(req.status == 200) setUserData(req.data.user);
-        else console.log(req.data);
+        await axios.get("http://localhost:3000/api/user/auth/me", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then((res: AxiosResponse) => {
+                // console.log(res.data);
+                if (res.status == 200) setUserData(res.data);
+            })
+            .catch((e: AxiosError) => {
+                if (e.response?.status == 403) {
+                    logout();
+                }
+                console.log(e.response?.data);
+            });
     }
 
+    const logout = () => {
+        sessionStorage.removeItem("access");
+        setToken(null);
+        setUserData(null);
+    }
 
 
 
@@ -26,7 +59,9 @@ export const UserProvider = ({children}: any) => {
     return <UserContext.Provider value={{
         userData, setUserData,
         getUserData,
-        token, setToken
+        token, setToken,
+        logout,
+        updateToken
     }}>{children}</UserContext.Provider>
 }
 

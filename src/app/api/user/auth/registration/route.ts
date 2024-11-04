@@ -1,17 +1,23 @@
 import * as argon from "argon2";
-import pool from "../../db";
-import { NextResponse } from "next/server";
+import pool from "../../../db";
+import { NextRequest, NextResponse } from "next/server";
+import { getUser } from "../auth";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+	const enroller = await getUser(req);
+	if (enroller.role == "NORMAL") {
+		return NextResponse.json({ message: "Unallowed!" }, { status: 403 });
+	}
+
 	const body = await req.json();
 	const hash = await argon.hash(body.password);
 	try {
 		const user = await pool.query(
 			`
-            INSERT INTO users (fullname, username, email, password)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO users (fullname, username, email, password, enrolled_by)
+            VALUES (?, ?, ?, ?, ?)
             `,
-			[body.fullname, body.username, body.email, hash]
+			[body.fullname, body.username, body.email, hash, enroller.id]
 		);
 
 		return NextResponse.json(

@@ -6,9 +6,9 @@ export const config = {
 };
 
 export async function middleware(req: NextRequest) {
-	const bearer = req.headers.get("Authorization");
+	const auth = req.headers.get("Authorization");
 
-	const token = bearer?.startsWith("Bearer ") && bearer.split(" ")[1];
+	const token = auth?.startsWith("Bearer ") && auth.split(" ")[1];
 	if (token) {
 		try {
 			const decoded = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET!));

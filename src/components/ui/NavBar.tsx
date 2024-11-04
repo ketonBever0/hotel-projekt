@@ -1,4 +1,6 @@
 import Link from "next/link";
+import AuthBlock from "./nav/AuthBlock";
+import AdminBlock from "./nav/AdminBlock";
 
 export default function NavBar() {
 
@@ -52,11 +54,11 @@ export default function NavBar() {
                         </details>
                     </li>
                     <li><a>Item 3</a></li>
+                    <AdminBlock />
                 </ul>
             </div>
-            <div className="navbar-end">
-                <Link href={"/registration"} className="btn">Sign Up</Link>
-                <Link href={"/login"} className="btn">Sign In</Link>
+            <div className="navbar-end space-x-2">
+                <AuthBlock />
             </div>
         </div>
     )

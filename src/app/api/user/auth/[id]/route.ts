@@ -1,14 +1,22 @@
-import { NextResponse } from "next/server";
-import pool from "../../db";
+import { NextRequest, NextResponse } from "next/server";
+import pool from "@api/db";
+import { RowDataPacket } from "mysql2";
 
 export async function GET(
-	request: Request,
-	{ params }: { params: { id: string } }
+	req: NextRequest,
+	{ params }: { params: Promise<{ id: string }> }
 ) {
 	try {
-		const user = pool.query("SELECT * FROM users WHERE id = ?;", [params.id]);
+		const [user] = await pool.query<RowDataPacket[]>(
+			`
+				SELECT u.id, u.username, u.email, u.fullname, u.role, e.username AS enrolledBy
+				FROM users AS u LEFT JOIN users AS e ON e.id = u.enrolled_by
+				WHERE u.id = ?;
+			`,
+			[(await params).id]
+		);
 
-		return NextResponse.json(user);
+		return NextResponse.json(user[0]);
 	} catch (error) {
 		return NextResponse.json(
 			{ message: "Error fetching user!", error: error },

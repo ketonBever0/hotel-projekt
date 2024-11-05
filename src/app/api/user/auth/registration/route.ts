@@ -14,10 +14,16 @@ export async function POST(req: NextRequest) {
 	try {
 		const user = await pool.query(
 			`
-            INSERT INTO users (fullname, username, email, password, enrolled_by)
-            VALUES (?, ?, ?, ?, ?)
+				INSERT INTO users (fullname, username, email, password, enrolled_by)
+				VALUES (?, ?, ?, ?, ?);
             `,
-			[body.fullname, body.username, body.email, hash, enroller.id]
+			[
+				body.fullname,
+				body.username.strip(),
+				body.email.strip(),
+				hash,
+				enroller.id,
+			]
 		);
 
 		return NextResponse.json(

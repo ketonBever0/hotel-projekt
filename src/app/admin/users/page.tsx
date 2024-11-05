@@ -1,4 +1,4 @@
-"use client"
+// "use client"
 
 import { UserContext } from "@/providers/UserContext";
 import axios, { AxiosError, AxiosResponse } from "axios";

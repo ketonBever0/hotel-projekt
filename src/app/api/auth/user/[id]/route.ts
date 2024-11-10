@@ -31,10 +31,8 @@ export async function PATCH(
 ) {
 	const body = await req.json();
 	try {
-		const update = await (
-			await pool
-		).query(
-			"UPDATE users WHERE id = ? SET name='?', email='?', username='?;",
+		const update = await pool.query(
+			"UPDATE users WHERE id = ? SET name = '?', email = '?', username = '?;",
 			[params.id, body.name, body.email, body.username]
 		);
 		return update;

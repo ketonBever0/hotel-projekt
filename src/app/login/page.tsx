@@ -17,7 +17,7 @@ export default function Login() {
     })
 
     const submit = async () => {
-        await axios.post("http://localhost:3000/api/user/login", formData)
+        await axios.post(`${process.env.appHost}/api/user/login`, formData)
             .then((res: AxiosResponse) => {
                 if (res.status == 200) {
                     // console.log("Belépve");

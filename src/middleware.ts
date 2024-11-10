@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 export const config = {
-	matcher: ["/:path*/auth/:path*"],
+	matcher: ["/api/auth/:path*"],
 };
 
 export async function middleware(req: NextRequest) {

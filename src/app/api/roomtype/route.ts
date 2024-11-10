@@ -4,7 +4,7 @@ import pool from "../db";
 export async function GET() {
 	try {
 		const [roomTypes] = await pool.query(`
-				SELECT id, name, bedrooms, single_beds AS singleBeds, double_beds AS doubleBeds, baby_beds AS babyBeds, description
+				SELECT id, name, bedrooms, single_beds AS singleBeds, double_beds AS doubleBeds, baby_beds AS babyBeds, description, daily_price AS dailyPrice
 				FROM room_types;
 			`);
 		return NextResponse.json(roomTypes);

@@ -30,7 +30,7 @@ export const UserProvider = ({ children }: any) => {
 
 
     const getUserData = async () => {
-        await axios.get("http://localhost:3000/api/user/auth/me", {
+        await axios.get("http://localhost:3000/api/auth/user/me", {
             headers: {
                 Authorization: `Bearer ${token}`
             }

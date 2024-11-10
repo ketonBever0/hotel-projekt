@@ -9,7 +9,7 @@ export async function PUT(req: NextRequest) {
 
     const body = await req.json();
 
-    const customer = await pool.query(`
+    const data = await pool.query(`
             UPDATE customers
             SET user_id = ?
             WHERE id = ?;

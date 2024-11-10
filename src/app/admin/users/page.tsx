@@ -1,8 +1,7 @@
-// "use client"
+"use client"
 
 import { UserContext } from "@/providers/UserContext";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export default function UsersPage() {
@@ -12,18 +11,10 @@ export default function UsersPage() {
         token, userData
     } = useContext(UserContext);
 
-    const route = useRouter();
-
-    // useEffect(() => {
-    //     if (!token) {
-    //         route.push("/login");
-    //     }
-    // }, [])
-
     const [users, setUsers] = useState<Array<UserType>>([]);
 
     const getUsers = async () => {
-        await axios.get("http://localhost:3000/api/user/auth/all", {
+        await axios.get("http://localhost:3000/api/auth/user/all", {
             headers: {
                 Authorization: `Bearer ${token}`
             }

@@ -32,8 +32,10 @@ export default function RootLayout({
         <Providers>
           <div data-theme="mytheme_one">
             <NavBar />
-            <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-300 flex justify-center items-center">
+            <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-300 flex justify-center items-center z-10">
+              <div className="mt-24">
               {children}
+              </div>
             </div>
           </div>
         </Providers>

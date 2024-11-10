@@ -27,12 +27,12 @@ export default function AuthBlock() {
                                 onClick={() => {
                                     logout();
                                 }}
-                                >Logout</button>
+                                >Kijelentkezés</button>
                             </div>
                         }
                     </div>
                     :
-                    <Link href={"/login"} className="btn btn-primary text-slate-200">Sign In</Link>
+                    <Link href={"/login"} className="btn btn-primary text-slate-200">Bejelentkezés</Link>
             }
         </div>
     );

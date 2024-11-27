@@ -16,9 +16,10 @@ export default function AdminBlock() {
                     <details>
                         <summary>Admin</summary>
                         <ul className="p-2">
-                            <li><Link href={"/admin/users"}>Users</Link></li>
-                            <li><Link href={"/admin/customers"}>Customers</Link></li>
-                            <li><Link href={"/admin/reservations"}>Reservations</Link></li>
+                            <li><Link href={"/admin/users"}>Dolgozók</Link></li>
+                            <li><Link href={"/admin/customers"}>Vendégek</Link></li>
+                            <li><Link href={"/admin/reservations"}>Szobafoglalások</Link></li>
+                            <li><Link href={"/admin/stats"}>Foglalási statisztikák</Link></li>
                         </ul>
                     </details>
                 </li>

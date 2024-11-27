@@ -107,7 +107,7 @@ export default function Page() {
                                                 {roomType.babyBeds} db</div>}
                                     </div>
                                     <div className="card-actions justify-end">
-                                        <Link href={`/booking/${roomType.id}`} className="btn btn-primary">{roomType.dailyPrice} HUF</Link>
+                                        <Link href={`/booking/${roomType.id}`} className="btn btn-primary">{roomType.dailyPrice} FT / nap</Link>
                                     </div>
                                 </div>
                             </div>

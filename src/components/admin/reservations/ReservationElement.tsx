@@ -1,15 +1,32 @@
 "use client"
 
+import { UserContext } from "@/providers/UserContext";
+import axios from "axios";
 import dateFormat from "dateformat";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ReactModal from "react-modal";
 
-export default function ReservationElement({ reservation }: { reservation: ReservationType }) {
+export default function ReservationElement({ reservation, update }: {
+    reservation: ReservationType, update: () => Promise<void>
+}) {
+
+    const { token } = useContext(UserContext);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    return (
+    const acceptCustomer = async () => {
+        await axios.put(`http://localhost:3000/api/auth/customer/${reservation.customerId}`, null, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then((res) => {
+                if (res.status == 200) update();
+            })
+            .catch((err) => console.log(err));
+    }
 
+    return (
 
         <tr>
             <ReactModal style={{
@@ -48,7 +65,7 @@ export default function ReservationElement({ reservation }: { reservation: Reser
                             </tr>
                             <tr>
                                 <td className="p-5 border-r text-lg">Elfogadta</td>
-                                <td className="p-5">{reservation.acceptedBy ? reservation.acceptedBy : <button className="btn btn-outline">Elfogadás</button>
+                                <td className="p-5">{reservation.acceptedBy ? reservation.acceptedBy : <button className="btn btn-outline" onClick={() => acceptCustomer()}>Elfogadás</button>
                                 }</td>
                             </tr>
                         </tbody>
@@ -56,7 +73,7 @@ export default function ReservationElement({ reservation }: { reservation: Reser
                 </div>
 
             </ReactModal>
-            <td>{dateFormat(reservation.requestedAt, "yyyy. mm. dd.")}</td>
+            <td className="py-4">{dateFormat(reservation.requestedAt, "yyyy. mm. dd.")}</td>
             <td>{dateFormat(reservation.startDate, "yyyy. mm. dd.")}</td>
             <td>{dateFormat(reservation.endDate, "yyyy. mm. dd.")}</td>
             <td>{reservation.roomNumber}</td>

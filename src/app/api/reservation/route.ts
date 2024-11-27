@@ -1,29 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "../db";
-import { QueryResult, ResultSetHeader, RowDataPacket } from "mysql2";
-import { getUser } from "../auth/user/auth";
-
-export async function GET() {
-	const [data] = await pool.query<RowDataPacket[]>(
-		`
-            SELECT f.id, f.requested_at AS requestedAt, f.start_date AS startDate, f.end_date AS endDate, f.room_id AS roomId, r.room_number AS roomNumber,
-				c.id AS customerId, c.email AS email, c.fullname AS fullname, c.mobile_number AS mobile, c.is_banned AS isBanned, u.username AS acceptedBy
-            FROM reservations AS f
-            JOIN rooms AS r ON f.room_id = r.id
-			JOIN customers AS c ON f.customer_id = c.id
-			LEFT JOIN users AS u ON c.user_id = u.id;
-        `,
-		[]
-	);
-	return NextResponse.json(data);
-}
+import { ResultSetHeader, RowDataPacket } from "mysql2";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 
 	const [availableRooms] = await pool.query<RowDataPacket[]>(
 		`
-			SELECT r.id, r.room_number, f.start_date, f.end_date
+			SELECT r.id, r.room_number, f.start_date, f.end_date, t.daily_price AS dailyPrice
 			FROM rooms AS r
 			LEFT JOIN reservations AS F ON f.room_id = r.id
 			JOIN room_types AS t ON r.room_type_id = t.id
@@ -65,7 +49,7 @@ export async function POST(req: NextRequest) {
 	);
 
 	if (customerQuery.length == 0) {
-		const [query] = await pool.query<RowDataPacket[]>(
+		const query = await pool.query<ResultSetHeader>(
 			`
 					INSERT INTO customers (email, fullname, mobile_number)
 					VALUES (?, ?, ?)
@@ -87,14 +71,14 @@ export async function POST(req: NextRequest) {
 		);
 	}
 
-	const [customer] = await pool.query<RowDataPacket[]>(
-		`
-			SELECT id, fullname, email, mobile_number AS mobileNumber, is_banned AS isBanned
-			FROM customers
-			WHERE id = ?;
-		`,
-		[customerId]
-	);
+	// const [customer] = await pool.query<RowDataPacket[]>(
+	// 	`
+	// 		SELECT id, fullname, email, mobile_number AS mobileNumber, is_banned AS isBanned
+	// 		FROM customers
+	// 		WHERE id = ?;
+	// 	`,
+	// 	[customerId]
+	// );
 	// console.log(customer[0]);
 
 	// return NextResponse.json({});
@@ -102,21 +86,24 @@ export async function POST(req: NextRequest) {
 
 	const [data] = await pool.query<ResultSetHeader>(
 		`
-			INSERT INTO reservations (start_date, end_date, customer_id, room_id)
-			VALUES (?, ?, ?, ?);
+			INSERT INTO reservations (start_date, end_date, customer_id, room_id, price)
+			VALUES (?, ?, ?, ?, DATEDIFF(?, ?) * ?);
 		`,
 		[
 			body.startDate,
 			body.endDate,
 			customerId,
 			parseInt(availableRooms[randomRoomIndex].id),
+			body.endDate,
+			body.startDate,
+			availableRooms[randomRoomIndex].dailyPrice
 		]
 	);
 	console.log(data);
 	const [reservation] = await pool.query<RowDataPacket[]>(
 		`
 			SELECT f.id AS id, f.start_date AS startDate, f.end_date AS endDate,
-				r.room_number AS roomNumber, t.name AS roomType, (DATEDIFF(f.end_date, f.start_date) * daily_price) AS price,
+				r.room_number AS roomNumber, t.name AS roomType, f.price AS price,
 				t.single_beds AS singleBeds, t.double_beds AS doubleBeds, t.baby_beds AS babyBeds
 			FROM reservations AS f
 			JOIN rooms as r ON f.room_id = r.id

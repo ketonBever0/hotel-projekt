@@ -9,9 +9,13 @@ export async function middleware(req: NextRequest) {
 	const auth = req.headers.get("Authorization");
 
 	const token = auth?.startsWith("Bearer ") && auth.split(" ")[1];
+	// console.log(token);
 	if (token) {
 		try {
-			const decoded = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET!));
+			const decoded = await jwtVerify(
+				token,
+				new TextEncoder().encode(process.env.JWT_SECRET!)
+			);
 			const res = NextResponse.next();
 			res.headers.set("x-user", JSON.stringify(decoded));
 			return res;

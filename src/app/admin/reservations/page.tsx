@@ -15,7 +15,7 @@ export default function ReservationsPage() {
     const [reservations, setReservations] = useState<Array<ReservationType>>([]);
 
     const getReservations = async () => {
-        await axios.get("http://localhost:3000/api/reservation", {
+        await axios.get("http://localhost:3000/api/auth/reservation", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -41,10 +41,10 @@ export default function ReservationsPage() {
 
             <div className="space-y-5 bg-base-100 rounded-lg p-12">
                 <div className="flex justify-center gap-8">
-                    <h1 className="text-3xl">Reservations</h1>
+                    <h1 className="text-3xl">Szobafoglalások</h1>
                     <div className="form-control">
                         <label className="label cursor-pointer space-x-4">
-                            <span className="label-text">Remember me</span>
+                            <span className="label-text">Csak a nem elfogadott vendégek általiak</span>
                             <input type="checkbox"
                                 className="checkbox bg-red-50"
                                 id="onlyUnaccepted"
@@ -57,11 +57,11 @@ export default function ReservationsPage() {
                 <table className="table-auto text-center">
                     <thead>
                         <tr>
-                            <th className="p-5 border-b">Requested At</th>
-                            <th className="p-5 border-b">Start Date</th>
-                            <th className="p-5 border-b">End Date</th>
-                            <th className="p-5 border-b">Room</th>
-                            <th className="p-5 border-b">By</th>
+                            <th className="p-5 border-b">Foglalta ekkor</th>
+                            <th className="p-5 border-b">Mettől</th>
+                            <th className="p-5 border-b">Meddig</th>
+                            <th className="p-5 border-b">Szobaszám</th>
+                            <th className="p-5 border-b">Vendég</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,7 +69,7 @@ export default function ReservationsPage() {
                             reservations.length > 0 && reservations
                                 .filter((r) => onlyUnaccepted ? !r.acceptedBy : 1 == 1)
                                 .map((reservation: ReservationType, key: React.Key) => (
-                                    <ReservationElement reservation={reservation} key={key} />
+                                    <ReservationElement reservation={reservation} update={getReservations} key={key} />
                                 ))
                         }
                     </tbody>

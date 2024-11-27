@@ -1,19 +1,17 @@
-import { NextRequest } from "next/server";
-import { getUser } from "../../user/auth/auth";
+import { NextRequest, NextResponse } from "next/server";
 import pool from "../../db";
+import { RowDataPacket } from "mysql2";
 
 
-export async function PUT(req: NextRequest) {
+export async function GET(req: NextRequest) {
 
-    const user = await getUser(req);
+    const [data] = await pool.query<RowDataPacket[]>(
+        `
+            SELECT c.id, c.fullname, c.email, c.mobile_number AS mobile, c.is_banned AS isBanned, u.username AS acceptedBy
+            FROM customers AS c LEFT JOIN users AS u ON c.user_id = u.id;
+        `,
+        []
+    );
 
-    const body = await req.json();
-
-    const data = await pool.query(`
-            UPDATE customers
-            SET user_id = ?
-            WHERE id = ?;
-        `, [user.id, body.id]);
-
-
+    return NextResponse.json(data);
 }

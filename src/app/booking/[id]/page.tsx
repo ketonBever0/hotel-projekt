@@ -45,7 +45,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     const getAvability = async () => {
         await axios.get(`${process.env.appHost}/api/roomtype/isavailable/${id}?startDate=${formData.startDate}&endDate=${formData.endDate}`)
             .then((res: AxiosResponse) => {
-                if (res.data.available == 0) setErrorText("A megadott idősávban nincs elérhető szoba a kívánt szobatípusból.\n Kérlek válassz másik idősávot.")
+                if (res.data.available == 0) setErrorText("A megadott idősávban nincs elérhető szoba a kívánt szobatípusból.\n Kérlek válassz másik idősávot.");
+                else setErrorText(null);
             });
     }
 
@@ -93,43 +94,43 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     <label className="input input-bordered flex items-center gap-2">
                         <b className="">E-mail cím:</b>
                         <input type="text" className="grow"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleFormChange}
+                            name="email"
+                            value={formData.email}
+                            onChange={handleFormChange}
                         />
                     </label>
                     <label className="input input-bordered flex items-center gap-2">
                         <b>Teljes név:</b>
                         <input type="text" className="grow"
-                        name="fullname"
-                        value={formData.fullname}
-                        onChange={handleFormChange}
+                            name="fullname"
+                            value={formData.fullname}
+                            onChange={handleFormChange}
                         />
                     </label>
                     <label className="input input-bordered flex items-center gap-2">
                         <b>Telefonszám:</b>
                         <input type="text" className="grow"
-                        name="mobile"
-                        value={formData.mobile}
-                        onChange={handleFormChange}
+                            name="mobile"
+                            value={formData.mobile}
+                            onChange={handleFormChange}
                         />
                     </label>
                 </div>
 
                 <div className="flex justify-center">
-                <button className="btn btn-base-200 w-20"
-                    disabled={errorText != null}
-                    onClick={async () => {
-                        await axios.post(`${process.env.appHost}/api/reservation`, formData)
-                            .then((res: AxiosResponse) => {
-                                if (res.status == 201) {
-                                    console.log("Szoba lefoglalva!")
-                                    console.log(res.data);
-                                    redirect(`/booking/data/${res.data.id}`);
-                                }
-                            })
-                    }}
-                >Foglalás</button>
+                    <button className="btn btn-base-200 w-20"
+                        disabled={errorText != null}
+                        onClick={async () => {
+                            await axios.post(`${process.env.appHost}/api/reservation`, formData)
+                                .then((res: AxiosResponse) => {
+                                    if (res.status == 201) {
+                                        // console.log("Szoba lefoglalva!")
+                                        // console.log(res.data);
+                                        redirect(`/booking/data/${res.data.id}`);
+                                    }
+                                })
+                        }}
+                    >Foglalás</button>
                 </div>
 
             </div>

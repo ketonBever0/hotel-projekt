@@ -25,6 +25,7 @@ export default function AuthBlock() {
                                 <Link href={"/profile"} className="w-full p-2 rounded block hover:bg-primary transition-all">Profil</Link>
                                 <button className="w-full p-2 rounded block hover:bg-error hover:text-black transition-all"
                                 onClick={() => {
+                                    setIsProfileMenuOpen(false);
                                     logout();
                                 }}
                                 >Kijelentkezés</button>

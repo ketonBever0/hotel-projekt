@@ -27,7 +27,10 @@ export async function PATCH(
 	}
 }
 
-export async function DELETE({ params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+	req: NextRequest,
+	{ params }: { params: Promise<{ id: string }> }
+) {
 	try {
 		await pool.query(
 			`

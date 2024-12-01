@@ -1,10 +1,10 @@
 "use client"
 
 import DeleteCustomerPrompt from "@/components/admin/customers/DeleteCustomerPrompt";
+import { tSuccess } from "@/components/ui/Toasts";
 import { UserContext } from "@/providers/UserContext";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useContext, useEffect, useState } from "react";
-import { TiDelete } from "react-icons/ti";
 
 export default function CustomersPage() {
 
@@ -16,6 +16,7 @@ export default function CustomersPage() {
     const [customers, setCustomers] = useState<Array<CustomerType>>([]);
 
     const getCustomers = async () => {
+        setCustomers([]);
         await axios.get("http://localhost:3000/api/auth/customer", {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -64,7 +65,10 @@ export default function CustomersPage() {
                                                 }
                                             })
                                                 .then((res) => {
-                                                    if (res.status == 200) getCustomers();
+                                                    if (res.status == 200) {
+                                                        tSuccess(res.data.message);
+                                                        getCustomers();
+                                                    };
                                                 })
                                                 .catch((err) => console.log(err));
                                         }}

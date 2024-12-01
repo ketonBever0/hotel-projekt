@@ -1,11 +1,14 @@
 import { RowDataPacket } from "mysql2";
 import pool from "../../db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET({ params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+	req: NextRequest,
+	{ params }: { params: Promise<{ id: string }> }
+) {
 	const [data] = await pool.query<RowDataPacket[]>(
 		`
-            SELECT r.id, r.room_number AS roomNumber, IFNULL(r.description, t.description) AS description, IFNULL(r.custom_price, t.daily_price) AS price, t.single_beds, t.double_beds, t.baby_beds
+            SELECT r.id, r.room_number AS roomNumber, r.description AS description, t.bedrooms, t.single_beds, t.double_beds, t.baby_beds
             FROM rooms AS r
             JOIN room_types AS t ON r.room_type_id = t.id
             WHERE r.id = ?;

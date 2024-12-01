@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import dateFormat from "dateformat";
 import ReactModal from "react-modal";
 import ReservationElement from "@/components/admin/reservations/ReservationElement";
+import toast from "react-hot-toast";
 
 export default function ReservationsPage() {
     const {
@@ -61,7 +62,9 @@ export default function ReservationsPage() {
                             <th className="p-5 border-b">Mettől</th>
                             <th className="p-5 border-b">Meddig</th>
                             <th className="p-5 border-b">Szobaszám</th>
+                            <th className="p-5 border-b">Ár</th>
                             <th className="p-5 border-b">Vendég</th>
+                            <th className="p-5 border-b">Törlés</th>
                         </tr>
                     </thead>
                     <tbody>

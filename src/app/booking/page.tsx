@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function Page() {
 
-    const [roomTypes, setRoomTypes] = useState<Array<any>>([]);
+    const [roomTypes, setRoomTypes] = useState<Array<RoomTypeType>>([]);
 
     const getRoomTypes = async () => {
         await axios.get(`${process.env.appHost}/api/roomtype`)
@@ -24,6 +24,7 @@ export default function Page() {
 
 
     const [filter, setFilter] = useState({
+        bedrooms: 0,
         singleBeds: 0,
         doubleBeds: 0,
         babyBeds: 0
@@ -38,10 +39,21 @@ export default function Page() {
 
 
     return (
-        <div className="space-y-5">
+        <div className="space-y-10">
             <h2 className="text-2xl text-center">Milyen szobát foglalnál?</h2>
 
             <div className="flex flex-wrap justify-center gap-10">
+
+            <div className="flex flex-col">
+                    <label htmlFor="singleBeds">Hálószobák száma minimum</label>
+                    <input type="number"
+                        className="input input-bordered"
+                        id="bedrooms"
+                        name="bedrooms"
+                        value={filter.bedrooms}
+                        onChange={handleFilterChange}
+                        min={0} />
+                </div>
 
                 <div className="flex flex-col">
                     <label htmlFor="singleBeds">Egyszemélyes ágyak minimum</label>
@@ -82,10 +94,11 @@ export default function Page() {
             <div className="flex flex-wrap justify-center gap-8">
                 {
                     roomTypes.length > 0 && roomTypes
+                        .filter((t) => t.bedrooms >= filter.bedrooms)
                         .filter((t) => t.singleBeds >= filter.singleBeds)
                         .filter((t) => t.doubleBeds >= filter.doubleBeds)
                         .filter((t) => t.babyBeds >= filter.babyBeds)
-                        .map((roomType: any, id: React.Key) => (
+                        .map((roomType, id: React.Key) => (
                             <div className="card bg-base-100 w-80 shadow-xl" key={id}>
                                 <figure>
                                     <img
@@ -106,8 +119,14 @@ export default function Page() {
                                             <div><img src={babyBedImg.src} className="w-8" title="Babaágyak száma" alt="Babaágyak száma" />
                                                 {roomType.babyBeds} db</div>}
                                     </div>
-                                    <div className="card-actions justify-end">
-                                        <Link href={`/booking/${roomType.id}`} className="btn btn-primary">{roomType.dailyPrice} FT / nap</Link>
+                                    <div>
+                                        <div className="float-start">
+                                            <p>{roomType.bedrooms} szobás</p>
+                                            <p className="leading-10">Elérhető: {roomType.roomCount} db</p>
+                                        </div>
+                                        <div className="card-actions float-end">
+                                            <Link href={`/booking/${roomType.id}`} className="btn btn-primary">{roomType.dailyPrice} FT / nap</Link>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

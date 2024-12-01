@@ -1,3 +1,15 @@
+type RoomTypeType = {
+    id: number,
+    name: string,
+    bedrooms: number,
+    singleBeds: number,
+    doubleBeds: number,
+    babyBeds: number,
+    dailyPrice: number,
+    description: string,
+    roomCount: number
+}
+
 type UserType = {
     id: number;
     username: string;
@@ -28,15 +40,17 @@ type ReservationType = {
     fullname: string,
     mobile: string,
     isBanned: boolean,
-    acceptedBy: number
+    acceptedBy: number,
+    price: number | null
 }
 
-type OneReservationType = {
+type DoneReservationType = {
     id: number,
     startDate: string,
     endDate: string,
     roomNumber: string,
-    price: number | null
+    price: number | null,
+    isAccepted: boolean
 }
 
 type ReservationStatType = {

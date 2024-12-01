@@ -6,7 +6,10 @@ import { getUser } from "../auth";
 export async function POST(req: NextRequest) {
 	const enroller = await getUser(req);
 	if (enroller.role == "NORMAL") {
-		return NextResponse.json({ message: "Unallowed!" }, { status: 403 });
+		return NextResponse.json(
+			{ message: "Nincs jogosultságod!" },
+			{ status: 403 }
+		);
 	}
 
 	const body = await req.json();
@@ -19,8 +22,8 @@ export async function POST(req: NextRequest) {
             `,
 			[
 				body.fullname,
-				body.username.strip(),
-				body.email.strip(),
+				body.username.trim(),
+				body.email.trim(),
 				hash,
 				enroller.id,
 			]
@@ -29,19 +32,20 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json(
 			{
 				user,
-				message: "User created!",
+				message: "Felhasználó regisztrálva!",
 			},
 			{ status: 201 }
 		);
 	} catch (e: any) {
+		// console.log(e.message);
 		if (e.message.includes("email")) {
 			return NextResponse.json(
-				{ message: "E-mail address already exists!" },
+				{ message: "E-mail cím már létezik!" },
 				{ status: 400 }
 			);
 		} else if (e.message.includes("username")) {
 			return NextResponse.json(
-				{ message: "Username already exists!" },
+				{ message: "Felhasználónév foglalt!" },
 				{ status: 400 }
 			);
 		}

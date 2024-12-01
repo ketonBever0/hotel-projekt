@@ -2,7 +2,9 @@
 
 import { UserContext } from "@/providers/UserContext";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { useContext, useState } from "react";
+import { tSuccess } from "../Toasts";
 
 export default function AuthBlock() {
 
@@ -27,6 +29,8 @@ export default function AuthBlock() {
                                 onClick={() => {
                                     setIsProfileMenuOpen(false);
                                     logout();
+                                    tSuccess("Kijelentkezve!")
+                                    redirect("/");
                                 }}
                                 >Kijelentkezés</button>
                             </div>

@@ -4,8 +4,10 @@ import pool from "../db";
 export async function GET() {
 	try {
 		const [roomTypes] = await pool.query(`
-				SELECT id, name, bedrooms, single_beds AS singleBeds, double_beds AS doubleBeds, baby_beds AS babyBeds, description, daily_price AS dailyPrice
-				FROM room_types;
+				SELECT t.id, t.name, t.bedrooms, t.single_beds AS singleBeds, t.double_beds AS doubleBeds, t.baby_beds AS babyBeds, t.description, t.daily_price AS dailyPrice, COUNT(r.id) roomCount
+				FROM room_types AS t JOIN rooms AS r ON t.id = r.room_type_id
+				WHERE r.is_in_order = 1
+				GROUP BY t.id;
 			`);
 		return NextResponse.json(roomTypes);
 	} catch (error) {

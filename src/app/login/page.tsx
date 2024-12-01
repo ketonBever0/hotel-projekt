@@ -1,6 +1,7 @@
 "use client"
+import { tError, tSuccess } from "@/components/ui/Toasts";
 import { UserContext } from "@/providers/UserContext";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 
@@ -24,12 +25,14 @@ export default function Login() {
                     sessionStorage.setItem("access", res.data.token)
                     updateToken();
                     router.push("/");
-                }
-                else {
-                    console.log(res);
+                    tSuccess("Sikeres bejelentkezés!");
                 }
             })
-            .catch(((e) => console.log(e)));
+            .catch(((e: AxiosError) => {
+                if (e.response?.status == 403) {
+                    tError("Hibás felhasználónév vagy jelszó!");
+                } else console.log(e);
+            }));
     }
 
 

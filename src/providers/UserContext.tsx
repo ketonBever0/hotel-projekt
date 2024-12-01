@@ -1,6 +1,8 @@
 "use client"
 
+import { tError } from "@/components/ui/Toasts";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { redirect } from "next/navigation";
 import { createContext, useEffect, useState } from "react"
 
 export const UserContext = createContext<any | null>(null);
@@ -42,6 +44,8 @@ export const UserProvider = ({ children }: any) => {
             .catch((e: AxiosError) => {
                 if (e.response?.status == 403) {
                     logout();
+                    tError("A munkamenet lejárt!");
+                    redirect("/login");
                 }
                 console.log(e.response?.data);
             });

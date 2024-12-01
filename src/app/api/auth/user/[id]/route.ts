@@ -26,16 +26,16 @@ export async function GET(
 }
 
 export async function PATCH(
-	req: Request,
-	{ params }: { params: { id: string } }
+	req: NextRequest,
+	{ params }: { params: Promise<{ id: string }> }
 ) {
 	const body = await req.json();
 	try {
 		const update = await pool.query(
 			"UPDATE users WHERE id = ? SET name = '?', email = '?', username = '?;",
-			[params.id, body.name, body.email, body.username]
+			[(await params).id, body.name, body.email, body.username]
 		);
-		return update;
+		return NextResponse.json({ message: "Adatok frissültek!" });
 	} catch (error) {
 		return NextResponse.json(
 			{ message: "Error!", error: error },

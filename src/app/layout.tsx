@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import NavBar from "@/components/ui/NavBar";
 import Providers from "./providers";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "../assets/fonts/GeistVF.woff",
@@ -34,7 +35,8 @@ export default function RootLayout({
             <NavBar />
             <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-300 flex justify-center items-center z-10">
               <div className="mt-24 mb-12">
-              {children}
+              <Toaster position="bottom-right" />
+                {children}
               </div>
             </div>
           </div>

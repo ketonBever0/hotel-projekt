@@ -1,3 +1,4 @@
+import { tSuccess } from "@/components/ui/Toasts";
 import { UserContext } from "@/providers/UserContext";
 import axios from "axios";
 import { useContext, useState } from "react";
@@ -24,7 +25,11 @@ export default function DeleteCustomerPrompt({ customerId, update }: { customerI
                             }
                         })
                         .then((res) => {
-                            if (res.status == 200) update();
+                            if (res.status == 200) {
+                                setIsDeleteConfirmOpen(false);
+                                tSuccess("Vendég törölve!");
+                                update()
+                            };
                         })
                         .catch((err) => console.log(err));
                     }} />

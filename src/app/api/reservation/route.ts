@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
 			availableRooms[randomRoomIndex].dailyPrice
 		]
 	);
-	console.log(data);
+	// console.log(data);
 	const [reservation] = await pool.query<RowDataPacket[]>(
 		`
 			SELECT f.id AS id, f.start_date AS startDate, f.end_date AS endDate,
